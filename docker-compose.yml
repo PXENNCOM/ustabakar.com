@@ -36,7 +36,10 @@ services:
       - "3001:3001"
 
   client:
-    build: ./client
+    build:
+      context: ./client
+      args:
+        VITE_API_URL: https://ustabakar.com/api
     container_name: usta_client
     restart: always
     depends_on:
