@@ -1,0 +1,24 @@
+# Bağımlılıklar
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Environment
+.env
+.env.local
+server/.env
+
+# Upload edilen dosyalar
+server/uploads/*
+!server/uploads/.gitkeep
+
+# Build çıktısı
+client/dist/
+
+# Log dosyaları
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db

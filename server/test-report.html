@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background: #fff; color: #1c1917; -webkit-font-smoothing: antialiased; }
+
+/* A4 Sayfa Yapısı Kilidi */
+.page { width: 210mm; height: 296.8mm; page-break-after: always; page-break-inside: avoid; display: flex; flex-direction: column; overflow: hidden; background: #fff; }
+
+/* KAPAK (Minimalist & SaaS Estetiği) */
+.cover { background: #ffffff; justify-content: space-between; padding: 40mm 20mm 20mm 20mm; position: relative; }
+.cover-accent-bar { position: absolute; top: 0; left: 0; width: 100%; height: 8px; bg-color: #ffe119; background: #ffe119; }
+.cover-content { display: flex; flex-direction: column; align-items: flex-start; text-align: left; }
+.cover-logo { display: flex; align-items: center; gap: 8px; margin-bottom: 40mm; }
+.cover-logo-icon { width: 36px; height: 36px; background: #ffe119; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+.cover-logo-text { font-size: 20px; font-weight: 800; color: #1A2238; letter-spacing: -0.5px; }
+.cover-logo-text span { color: #a1a1aa; font-weight: 400; }
+.cover-badge { background: #1A2238; color: #ffe119; font-size: 10px; font-weight: 800; tracking-spacing: 2px; padding: 6px 12px; border-radius: 6px; text-transform: uppercase; margin-bottom: 6px; }
+.cover-report-title { font-size: 38px; font-weight: 800; color: #1A2238; tracking-spacing: -1px; line-height: 1.1; margin-bottom: 24px; }
+.cover-plate { border: 2px solid #1A2238; border-radius: 12px; padding: 10px 32px; font-size: 28px; font-weight: 800; letter-spacing: 4px; color: #1A2238; display: inline-block; margin-bottom: 36px; background: #fafafa; }
+.cover-meta-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; width: 100%; max-w: 500px; }
+.cover-meta-item { border-left: 3px solid #ffe119; padding-left: 14px; }
+.cover-meta-label { font-size: 10px; color: #71717a; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; margin-bottom: 4px; }
+.cover-meta-value { font-size: 15px; font-weight: 700; color: #1c1917; }
+.cover-footer { font-size: 11px; font-weight: 500; color: #71717a; border-top: 1px solid #e4e4e7; pt: 16px; padding-top: 16px; width: 100%; }
+
+/* STANDART SAYFA ÜST / ALT ALANI */
+.page-header { height: 20mm; padding: 0 20mm; display: flex; align-items: center; justify-content: space-between; border-b: 1px solid #e4e4e7; border-bottom: 1px solid #e4e4e7; background: #fafafa; }
+.header-logo { font-size: 13px; font-weight: 800; color: #1A2238; }
+.header-logo span { color: #a1a1aa; font-weight: 400; }
+.header-title { font-size: 11px; font-weight: 700; color: #71717a; text-transform: uppercase; letter-spacing: 1px; }
+.page-footer { height: 15mm; padding: 0 20mm; border-top: 1px solid #e4e4e7; display: flex; align-items: center; justify-content: space-between; font-size: 10px; font-weight: 600; color: #a1a1aa; background: #fafafa; }
+.page-content { flex: 1; padding: 12mm 20mm; overflow: hidden; }
+
+/* KÜNYE VE DETAYLAR */
+.section-title { font-size: 12px; font-weight: 800; color: #1A2238; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.section-title::before { content: ''; width: 4px; height: 14px; background: #ffe119; display: inline-block; border-radius: 2px; }
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+.info-item { background: #ffffff; border: 1px solid #e4e4e7; border-radius: 10px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; }
+.info-item.full { grid-column: span 2; background: #fafafa; border-color: #e4e4e7; }
+.info-label { font-size: 11px; font-weight: 700; color: #71717a; text-transform: uppercase; letter-spacing: 0.5px; }
+.info-value { font-size: 13px; font-weight: 700; color: #1c1917; }
+.info-value.plate { font-size: 18px; letter-spacing: 2px; color: #1A2238; font-weight: 800; }
+.parties-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+.party-card { border: 1px solid #e4e4e7; border-radius: 12px; overflow: hidden; background: #ffffff; }
+.party-header { background: #fafafa; padding: 10px 16px; font-size: 11px; font-weight: 700; color: #1c1917; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #e4e4e7; }
+.party-body { padding: 14px 16px; }
+.party-name { font-size: 14px; font-weight: 700; color: #1c1917; }
+.party-sub { font-size: 12px; color: #71717a; margin-top: 2px; font-weight: 500; }
+.note-box { background: #fafafa; border: 1px solid #e4e4e7; border-radius: 12px; padding: 16px; margin-bottom: 20px; }
+.note-text { font-size: 13px; color: #44403c; line-height: 1.6; font-weight: 500; }
+.validity-box { background: #fffbeb; border: 1px solid #fef3c7; border-radius: 10px; padding: 12px 16px; font-size: 11px; font-weight: 600; color: #b45309; line-height: 1.5; }
+
+/* SORULAR & BULGULAR */
+.answers-list { display: flex; flex-direction: column; width: 100%; border: 1px solid #e4e4e7; border-radius: 14px; overflow: hidden; }
+.answer-row { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 20px; padding: 14px 20px; border-bottom: 1px solid #e4e4e7; align-items: center; background: #fff; }
+.answer-row:last-child { border-bottom: 0; }
+.answer-row.even { background: #fafafa; }
+.answer-q { font-size: 12px; font-weight: 600; color: #1c1917; line-height: 1.5; }
+.answer-v { display: flex; justify-content: flex-end; align-items: center; }
+.badge { background: #1A2238; color: #fff; font-size: 10px; font-weight: 700; padding: 4px 12px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+.open-text { font-size: 12px; color: #44403c; font-weight: 600; text-align: right; }
+.no-answer { font-size: 12px; color: #d4d4d8; font-weight: 500; }
+
+/* FOTOĞRAF GALERİSİ */
+.photos-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; height: 100%; align-content: start; }
+.photo-container { width: 100%; aspect-ratio: 4/3; overflow: hidden; border-radius: 12px; border: 1px solid #e4e4e7; background: #fafafa; }
+.photo { width: 100%; height: 100%; object-fit: cover; }
+</style>
+</head>
+<body>
+  
+  <div class="page cover" style="position: relative;">
+    <div class="cover-accent-bar"></div>
+    
+    <div class="cover-content" style="width: 100%;">
+      <div class="cover-logo">
+        <div class="cover-logo-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1A2238" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/>
+            <circle cx="7" cy="17" r="2"/>
+            <path d="M9 17h6"/>
+            <circle cx="17" cy="17" r="2"/>
+          </svg>
+        </div>
+        <div class="cover-logo-text">Usta<span>bakar</span></div>
+      </div>
+      
+      <div class="cover-badge">Ekspertiz Raporu</div>
+      <div class="cover-report-title">Dijital Ön Kontrol<br/>Mekanik Raporu</div>
+      <div class="cover-plate">34 ABC 3444</div>
+      
+      <div class="cover-meta-grid">
+        
+          <div class="cover-meta-item">
+            <div class="cover-meta-label">Araç Detayı</div>
+            <div class="cover-meta-value">Toyota Corolla</div>
+          </div>
+        
+        
+          <div class="cover-meta-item">
+            <div class="cover-meta-label">Model Yılı</div>
+            <div class="cover-meta-value">2024</div>
+          </div>
+        
+        
+          <div class="cover-meta-item">
+            <div class="cover-meta-label">Kilometre Kaydı</div>
+            <div class="cover-meta-value">23.000 km</div>
+          </div>
+        
+        <div class="cover-meta-item">
+          <div class="cover-meta-label">Rapor Numarası</div>
+          <div class="cover-meta-value">#4</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="position: absolute; right: 20mm; bottom: 32mm; width: 130px; height: 130px; border: 3.5px dashed rgba(26,34,56,0.18); border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; transform: rotate(-8deg); select-none; pointer-events: none; background: rgba(255,255,255,0.4); backdrop-blur-sm: 2px;">
+      <span style="font-size: 9px; font-weight: 800; color: #1A2238; letter-spacing: 1.2px; opacity: 0.7;">USTABAKAR</span>
+      <span style="font-size: 11px; font-weight: 900; color: #ffe119; background: #1A2238; padding: 3px 8px; border-radius: 5px; margin: 5px 0; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(26,34,56,0.1);">ONAYLANDI</span>
+      <span style="font-size: 9px; font-weight: 700; color: #71717a; font-family: monospace;">ID: OP-4</span>
+    </div>
+    
+    <div class="cover-footer">
+      GİZLİDİR • İşbu ekspertiz ön raporu <strong>29 Mayıs 2026 19:21</strong> tarihinde düzenlenmiştir. Düzenlendiği an haricindeki zamanlarda aracın durumundaki aşınma ve değişikliklerden platformumuz sorumlu tutulamaz.
+    </div>
+  </div>
+  
+  <div class="page">
+    <div class="page-header">
+      <div class="header-logo">Usta<span>bakar</span></div>
+      <div class="header-title">Araç Teslim & Ön Ekspertiz Raporu</div>
+    </div>
+    
+    <div class="page-content" style="padding-top: 8mm; padding-bottom: 8mm;">
+      
+      <div class="section-title">Rapor Bilgileri</div>
+      <div className="info-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;">
+        <div class="party-card">
+          <div class="party-header">Operasyon Detayları</div>
+          <div class="party-body" style="padding: 10px 14px; font-size: 12px;">
+            <div style="display: flex; justify-content: space-between; py: 4px; margin-bottom: 6px;">
+              <span style="color: #71717a; font-weight: 600;">Rapor No:</span>
+              <span style="font-weight: 700; color: #1c1917;">#4</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+              <span style="color: #71717a; font-weight: 600;">Ekspertiz Tarihi:</span>
+              <span style="font-weight: 700; color: #1c1917;">29 Mayıs 2026 19:21</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: #71717a; font-weight: 600;">Hizmet Tipi:</span>
+              <span style="font-weight: 800; color: #1A2238; letter-spacing: 0.5px;">ÖN EKSPERTİZ PAKETİ</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="party-card">
+          <div class="party-header">Süreç Tarafları</div>
+          <div class="party-body" style="padding: 10px 14px; font-size: 12px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+              <span style="color: #71717a; font-weight: 600;">Alıcı (Müşteri):</span>
+              <span style="font-weight: 700; color: #1c1917;">Berat Peksen</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+              <span style="color: #71717a; font-weight: 600;">Müşteri Tel:</span>
+              <span style="font-weight: 700; color: #1c1917;">05457929406</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: #71717a; font-weight: 600;">Yetkili Personel:</span>
+              <span style="font-weight: 700; color: #1c1917;">ahmet yılmaz (Usta)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-title">Araç Bilgileri</div>
+      <div class="info-grid" style="margin-bottom: 20px;">
+        <div class="info-item full">
+          <div class="info-label">Araç Plakası</div>
+          <div class="info-value plate">34 ABC 3444</div>
+        </div>
+        <div class="info-item full"><div class="info-label">Şasi Numarası</div><div class="info-value" style="font-family: monospace; font-size: 13px; letter-spacing: 0.5px;">EFVLKE2342KLNDFMBKLD</div></div>
+        
+    <div class="info-item">
+      <div class="info-label">Marka / Model</div>
+      <div class="info-value">Toyota Corolla</div>
+    </div>
+        
+    <div class="info-item">
+      <div class="info-label">Model Yılı</div>
+      <div class="info-value">2024</div>
+    </div>
+        
+    <div class="info-item">
+      <div class="info-label">Kilometre Verisi</div>
+      <div class="info-value">23.000 km</div>
+    </div>
+        
+    <div class="info-item">
+      <div class="info-label">Şanzıman Tipi</div>
+      <div class="info-value">Otomatik</div>
+    </div>
+        
+    <div class="info-item">
+      <div class="info-label">Gövde Rengi</div>
+      <div class="info-value">Siyah</div>
+    </div>
+        
+    <div class="info-item">
+      <div class="info-label">Motor Hacmi</div>
+      <div class="info-value">1600 cc</div>
+    </div>
+      </div>
+
+      
+        <div class="section-title">Uzman Notu ve Genel Değerlendirme</div>
+        <div class="note-box" style="margin-bottom: 20px; border-left: 4px solid #ffe119;">
+          <div class="note-text" style="font-size: 12.5px;">Araç Sıkıntılı Alınmaz!</div>
+        </div>
+      
+
+      <div class="section-title">Ön Ekspertiz Hizmet Sözleşmesi ve Yasal Sorumluluk Sınırları</div>
+      <div class="note-box" style="background: #fafafa; border: 1.5px solid #e4e4e7; padding: 12px; margin-bottom: 0;">
+        <ol style="margin-left: 14px; font-size: 10px; color: #52525b; line-height: 1.5; font-weight: 500; text-align: justify;">
+          <li style="margin-bottom: 4px;">Bu rapor, tarafların talebi üzerine ilgili aracın belirtilen tarih ve saatteki durumunu tespit eden bir <strong>Ön Ekspertiz</strong> raporudur. Satış veya tescil sözleşmesi niteliği taşımaz.</li>
+          <li style="margin-bottom: 4px;">İncelemeyi gerçekleştiren uzman (Usta), aracı lifte kaldırmadan, motoru sökmeden ve parça dağıtımı yapmadan, tamamen fiziki gözlem, elektronik arıza tespit cihazı (OBD) ve saha tecrübesiyle ön kontrol gerçekleştirmektedir. Sökülmeden tespit edilemeyen gizli ayıplardan uzman veya platform sorumlu tutulamaz.</li>
+          <li style="margin-bottom: 4px;">Rapor içeriğinde yer alan kilometre, donanım ve tescil verileri inceleme anında aracın gösterge panelinden ve ruhsatından okunan anlık verilerdir. Geçmişe dönük kilometre müdahaleleri veya beyan dışı parça değişimleri bu raporun sorumluluk kapsamında değildir.</li>
+          <li style="margin-bottom: 4px;">İşbu hizmet bir <strong>Ön İnceleme</strong> danışmanlığı olup, raporun tanzim edildiği tarih ve kilometreden sonra araçta meydana gelebilecek mekanik, elektronik veya kozmetik aşınma, arıza ve modifikasyonlardan Ustalar veya <strong>ustabakar.com</strong> hiçbir şekilde hukuki veya cezai olarak sorumlu değildir.</li>
+          <li style="margin-bottom: 4px;">Rapor sadece başvuru sahibi alıcının bilgilendirilmesi amacıyla üretilmiş olup, üçüncü şahıslara devredilemez, ticari bir alım-satım güvencesi veya garanti belgesi olarak mahkemelerde delil olarak öne sürülemez.</li>
+        </ol>
+      </div>
+
+    </div>
+    
+    <div class="page-footer">
+      <span>Rapor No: #4 • İnceleme Özeti</span>
+      <span>Sayfa 2</span>
+    </div>
+  </div>
+  
+    <div class="page">
+      <div class="page-header">
+        <div class="header-logo">Usta<span>bakar</span></div>
+        <div class="header-title">Airbag Ekspertiz Bulguları</div>
+      </div>
+      
+      <div class="page-content">
+        <div class="section-title">Airbag Ekspertiz Detay İncelemesi</div>
+        <div class="answers-list">
+          
+            <div class="answer-row even">
+              <div class="answer-q">Direksiyon Airbag</div>
+              <div class="answer-v">
+                <span class="badge">İşlem Görmüş</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Sağ Torpido Airbag</div>
+              <div class="answer-v">
+                <span class="badge">Değişmiş</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Sol Perde Airbag</div>
+              <div class="answer-v">
+                <span class="badge">İşlem Görmüş</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Sağ Perde Airbag</div>
+              <div class="answer-v">
+                <span class="badge">İşlem Görmüş</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Sağ Ön Koltuk Airbag</div>
+              <div class="answer-v">
+                <span class="badge">Emülatörlü / dirençli</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Sol Ön Koltuk Airbag</div>
+              <div class="answer-v">
+                <span class="badge">Değişmiş</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Sağ Ön Emniyet Kemeri Fişeği</div>
+              <div class="answer-v">
+                <span class="badge">İşlem Görmüş</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Sol Ön Emniyet Kemeri Fişeği</div>
+              <div class="answer-v">
+                <span class="badge">Patlamış</span>
+                
+                
+              </div>
+            </div>
+          
+        </div>
+      </div>
+      
+      <div class="page-footer">
+        <span>Rapor #4 · Airbag Ekspertiz</span>
+        <span>Sayfa 3</span>
+      </div>
+    </div>
+    <div class="page">
+      <div class="page-header">
+        <div class="header-logo">Usta<span>bakar</span></div>
+        <div class="header-title">Araç İç/Dış Ekspertiz Bulguları</div>
+      </div>
+      
+      <div class="page-content">
+        <div class="section-title">Araç İç/Dış Ekspertiz Detay İncelemesi</div>
+        <div class="answers-list">
+          
+            <div class="answer-row even">
+              <div class="answer-q">Aydınlatmalar</div>
+              <div class="answer-v">
+                <span class="badge">Performans Düşük</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Dikiz Aynası</div>
+              <div class="answer-v">
+                <span class="badge">Hasarlı</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Emniyet Kemerleri Kontrol</div>
+              <div class="answer-v">
+                <span class="badge">Deforme</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Güneşlikler Kontrol</div>
+              <div class="answer-v">
+                <span class="badge">Lekeler Mevcut</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Torpido Kontrol</div>
+              <div class="answer-v">
+                <span class="badge">Deforme</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Direksiyon Kontrol</div>
+              <div class="answer-v">
+                <span class="badge">Sağlam</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Koltuklar Kontrol</div>
+              <div class="answer-v">
+                <span class="badge">İyi, Lekeler Mevcut</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Döşemeler</div>
+              <div class="answer-v">
+                <span class="badge">Yırtıklar var</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Cam Kumandası Kontrol</div>
+              <div class="answer-v">
+                <span class="badge">Kısmen Çalışıyor</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Klima Kontrol</div>
+              <div class="answer-v">
+                <span class="badge">Fan çalışmıyor</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Gösterge Paneli Kontrol</div>
+              <div class="answer-v">
+                <span class="badge">Airbag ışığı yanıyor</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Radyo</div>
+              <div class="answer-v">
+                <span class="badge">Çalışmıyor</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Teyp</div>
+              <div class="answer-v">
+                <span class="badge">Çalışıyor</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Kapı Kolları</div>
+              <div class="answer-v">
+                <span class="badge">Deforme</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Koltuk Isıtma</div>
+              <div class="answer-v">
+                <span class="badge">Çalışmıyor</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Elektirikli Ayna</div>
+              <div class="answer-v">
+                <span class="badge">Çalışmıyor</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Pedallar</div>
+              <div class="answer-v">
+                <span class="badge">Aşınma kilometre ile uyumsuz</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Kapı Kilitleri</div>
+              <div class="answer-v">
+                <span class="badge">Merkezi kilit çalışıyor, keyless arızalı</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Göğüs/Orta Konsol Kontrol</div>
+              <div class="answer-v">
+                <span class="badge">Sağlam, hafif çizikler mevcut</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Korna</div>
+              <div class="answer-v">
+                <span class="badge">Çalışıyor</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Farlar Kontrol</div>
+              <div class="answer-v">
+                <span class="badge">Sağlam, Sorunsuz</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Ön - Arka Sisler</div>
+              <div class="answer-v">
+                <span class="badge">Çalışıyor, camda çizikler mevcut</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Sinyaller ve Dörtlü İkaz</div>
+              <div class="answer-v">
+                <span class="badge">Çalışıyor, sorunsuz</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Silecekler</div>
+              <div class="answer-v">
+                <span class="badge">Çalışıyor</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Camlar Kontrol</div>
+              <div class="answer-v">
+                <span class="badge">Film mevcut</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Arka Stoplar Kontrol</div>
+              <div class="answer-v">
+                <span class="badge">Orijinal, sağlam</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Stepne Kontrol</div>
+              <div class="answer-v">
+                <span class="badge">Mevcut, kullanılmamış</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Cam / Kapı Fitili Kontol</div>
+              <div class="answer-v">
+                <span class="badge">Çizik mevcut</span>
+                
+                
+              </div>
+            </div>
+          
+        </div>
+      </div>
+      
+      <div class="page-footer">
+        <span>Rapor #4 · Araç İç/Dış Ekspertiz</span>
+        <span>Sayfa 4</span>
+      </div>
+    </div>
+    <div class="page">
+      <div class="page-header">
+        <div class="header-logo">Usta<span>bakar</span></div>
+        <div class="header-title">Motor Ekspertiz Bulguları</div>
+      </div>
+      
+      <div class="page-content">
+        <div class="section-title">Motor Ekspertiz Detay İncelemesi</div>
+        <div class="answers-list">
+          
+            <div class="answer-row even">
+              <div class="answer-q">Motor Koruyucu Kapağı</div>
+              <div class="answer-v">
+                <span class="badge">Deforme</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Hava Filtre Hortumları</div>
+              <div class="answer-v">
+                <span class="badge">Çatlak mevcut, hava kaçağı var</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Motor Elektirik Tesisatı</div>
+              <div class="answer-v">
+                <span class="badge">Sağlam, orijinal</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Motor Üst Bölge Yağ Sızdırmalığı</div>
+              <div class="answer-v">
+                <span class="badge">Kuru, sorunsuz</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Motor Yağ Seviyesi Kontrol</div>
+              <div class="answer-v">
+                <span class="badge">Normal seviyede, sorunsuz</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Motor Isı ve Ve Ses İzalosyonu</div>
+              <div class="answer-v">
+                <span class="badge">İyi</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Turbo Intercooler Kontrolü</div>
+              <div class="answer-v">
+                <span class="badge">Turbo sesli çalışıyor</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Triger Kayışı</div>
+              <div class="answer-v">
+                <span class="badge">Yıpranmış, kontrol edilmeli</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Su Hortumları Sızdırmalığı</div>
+              <div class="answer-v">
+                <span class="badge">Çatlak mevcut, kaçak yapıyor</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Yakıt Sistemi ve Sızdırmalık</div>
+              <div class="answer-v">
+                <span class="badge">Kaçak yok, sorunsuz</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Direksiyon Pompa Kontrol</div>
+              <div class="answer-v">
+                <span class="badge">Sağlam, sorunsuz</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Soğutma Fanları</div>
+              <div class="answer-v">
+                <span class="badge">Kötü</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Motor Su Radyatörü Sızdırmazlığı</div>
+              <div class="answer-v">
+                <span class="badge">Kaçak yok, sorunsuz</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Klima Kompresör  ve Boruları</div>
+              <div class="answer-v">
+                <span class="badge">Çalışıyor</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Motor Üfleme Varmı?</div>
+              <div class="answer-v">
+                <span class="badge">Var</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Fren Hidroliği</div>
+              <div class="answer-v">
+                <span class="badge">Pedal sert, kontrol edilmeli</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Motor Vuruntulu Çalışma Mevcutmu ? </div>
+              <div class="answer-v">
+                <span class="badge">Hayır, yok</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Turbo Genel Kontrol</div>
+              <div class="answer-v">
+                <span class="badge">Güç kaybı mevcut, basınç düşüklüğü</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Akü</div>
+              <div class="answer-v">
+                <span class="badge">Kutup başları oksitli, zayıf temas</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Sağ/Sol kule Bilyaları</div>
+              <div class="answer-v">
+                <span class="badge">Sağlam, ses yok</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">V Kayışı Kontrol</div>
+              <div class="answer-v">
+                <span class="badge">Kopma riski mevcut, acil değişim gerekli</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Sarj Dinamosu</div>
+              <div class="answer-v">
+                <span class="badge">Uğultu mevcut, rulman kontrol edilmeli</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Yağ Yakma Mevcutmu?</div>
+              <div class="answer-v">
+                <span class="badge">Hafif yağ yakıyor!</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Marş Dinamosu Kontrol</div>
+              <div class="answer-v">
+                <span class="badge">Sağlam, sorunsuz</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Enjektör Durumu Kontrol ?</div>
+              <div class="answer-v">
+                <span class="badge">Sağlam, sorunsuz</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Sıvı Kontrolleri</div>
+              <div class="answer-v">
+                <span class="badge">Tüm sıvılar normal seviyede</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Eksantrik Zincir</div>
+              <div class="answer-v">
+                <span class="badge">Sağlam, sorunsuz</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Motor Su Kaçağı / Eksiltme</div>
+              <div class="answer-v">
+                <span class="badge">Kaçak yok, sorunsuz</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Servis Bakımı</div>
+              <div class="answer-v">
+                <span class="badge">Önerilir</span>
+                
+                
+              </div>
+            </div>
+          
+        </div>
+      </div>
+      
+      <div class="page-footer">
+        <span>Rapor #4 · Motor Ekspertiz</span>
+        <span>Sayfa 5</span>
+      </div>
+    </div>
+    <div class="page">
+      <div class="page-header">
+        <div class="header-logo">Usta<span>bakar</span></div>
+        <div class="header-title">Mekanik Ekspertiz Bulguları</div>
+      </div>
+      
+      <div class="page-content">
+        <div class="section-title">Mekanik Ekspertiz Detay İncelemesi</div>
+        <div class="answers-list">
+          
+            <div class="answer-row even">
+              <div class="answer-q">Yay ve Amortisör (Ön)</div>
+              <div class="answer-v">
+                <span class="badge">Yay kırık, riskli</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Yay ve Amartisör (Arka)</div>
+              <div class="answer-v">
+                <span class="badge">Amortisör zayıf, kontrol edilmeli</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Fren Balata Durumu (Ön)</div>
+              <div class="answer-v">
+                <span class="badge">Az aşınmış, sorunsuz</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Fren Balata Durumu (Arka)</div>
+              <div class="answer-v">
+                <span class="badge">Az aşınmış, sorunsuz</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Rot Kolları ve Rot Başları</div>
+              <div class="answer-v">
+                <span class="badge">Deforme</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Salıncak Burç Rotilleri</div>
+              <div class="answer-v">
+                <span class="badge">Hafif boşluk mevcut, kontrol edilmeli</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Aks ve Aks Körükleri</div>
+              <div class="answer-v">
+                <span class="badge">Körük yırtık, gres kaçağı mevcut</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Motor ve Şanzıman Alt Takozları</div>
+              <div class="answer-v">
+                <span class="badge">Sağlam, sorunsuz</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Şanzıman Kontrol</div>
+              <div class="answer-v">
+                <span class="badge">Sağlam, vites geçişleri normal</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Difransiyel Kontrol</div>
+              <div class="answer-v">
+                <span class="badge">Sağlam, sorunsuz</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Direksiyon Kutusu</div>
+              <div class="answer-v">
+                <span class="badge">Sağlam, sorunsuz</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Debriyaj Kontrol </div>
+              <div class="answer-v">
+                <span class="badge">Sert çalışıyor, kontrol edilmeli</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Egzoz Kontrolü</div>
+              <div class="answer-v">
+                <span class="badge">Siyah duman mevcut, kontrol edilmeli</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Egzoz Boru ve Susturucuları</div>
+              <div class="answer-v">
+                <span class="badge">Sağlam, sorunsuz</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Arazi Şaftı</div>
+              <div class="answer-v">
+                <span class="badge">Hafif titreşim mevcut, kontrol edilmeli</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Arazi Şanzımanı</div>
+              <div class="answer-v">
+                <span class="badge">Hafif uğultu mevcut, kontrol edilmeli</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Ön Krank Keçesi</div>
+              <div class="answer-v">
+                <span class="badge">Kaçak yok, sorunsuz</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Torsiyon Burç / Denge Kolları</div>
+              <div class="answer-v">
+                <span class="badge">Hafif boşluk mevcut, kontrol edilmeli</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Yağ Soğutucusu</div>
+              <div class="answer-v">
+                <span class="badge">Hafif terleme mevcut, kontrol edilmeli</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Arka Krank Keçesi</div>
+              <div class="answer-v">
+                <span class="badge">Yağ kaçağı mevcut</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Karter Kontrol</div>
+              <div class="answer-v">
+                <span class="badge">Conta yıpranmış, sızdırma var</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Motor Alt Muhafaza</div>
+              <div class="answer-v">
+                <span class="badge">Sürtme izi mevcut</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Fren Hortumları</div>
+              <div class="answer-v">
+                <span class="badge">Şişme mevcut, riskli</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Fren Disk (Ön)</div>
+              <div class="answer-v">
+                <span class="badge">Kanal oluşmuş, aşınmış</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Fren Disk (Arka)</div>
+              <div class="answer-v">
+                <span class="badge">Sağlam</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">El Freni Halatları</div>
+              <div class="answer-v">
+                <span class="badge">Esneme mevcut, kontrol edilmeli</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Air Matik</div>
+              <div class="answer-v">
+                <span class="badge">Hafif hava kaçağı mevcut, kontrol edilmeli</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Davlumbazların Kontrolü</div>
+              <div class="answer-v">
+                <span class="badge">Çatlak mevcut, kontrol edilmeli</span>
+                
+                
+              </div>
+            </div>
+          
+        </div>
+      </div>
+      
+      <div class="page-footer">
+        <span>Rapor #4 · Mekanik Ekspertiz</span>
+        <span>Sayfa 6</span>
+      </div>
+    </div>
+    <div class="page">
+      <div class="page-header">
+        <div class="header-logo">Usta<span>bakar</span></div>
+        <div class="header-title">OBD Arıza Tespit Bulguları</div>
+      </div>
+      
+      <div class="page-content">
+        <div class="section-title">OBD Arıza Tespit Detay İncelemesi</div>
+        <div class="answers-list">
+          
+            <div class="answer-row even">
+              <div class="answer-q">Motor Elektroniği Kayıt</div>
+              <div class="answer-v">
+                <span class="badge">Arıza kodu yok, sorunsuz</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Hava Yastığı Kayıt</div>
+              <div class="answer-v">
+                <span class="badge">Arıza kodu yok, sorunsuz</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Fren Sistemleri Kayıt</div>
+              <div class="answer-v">
+                <span class="badge">Arıza kodu yok, sorunsuz</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Otomatik Şanzıman Elektroniği</div>
+              <div class="answer-v">
+                <span class="badge">Geçmiş arıza kaydı mevcut</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Multi Medya Kayıt</div>
+              <div class="answer-v">
+                <span class="badge">Modül iletişim hatası</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Akü Kontrol</div>
+              <div class="answer-v">
+                <span class="badge">Arıza kodu yok, sorunsuz</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Direksiyon Kumanda Elektroniği</div>
+              <div class="answer-v">
+                <span class="badge">Arıza kodu yok, sorunsuz</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Dijital Klima Elektroniği Kayıt</div>
+              <div class="answer-v">
+                <span class="badge">Geçmiş klima gaz basınç hatası</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Gösterge Paneli Elektronikleri</div>
+              <div class="answer-v">
+                <span class="badge">Silinmiş hata kodu</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Merkezi Elektronik Kayıt</div>
+              <div class="answer-v">
+                <span class="badge">Arıza kodu yok, sorunsuz</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">Park Sensörü Kayıt</div>
+              <div class="answer-v">
+                <span class="badge">Arıza kodu yok, sorunsuz</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">Hız Sabitleyici Sistemi Kayıt</div>
+              <div class="answer-v">
+                <span class="badge">Direksiyon kumanda hatası</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row even">
+              <div class="answer-q">ABS Sistemi Kayıt</div>
+              <div class="answer-v">
+                <span class="badge">Fren kontrol modülü çalışmıyor</span>
+                
+                
+              </div>
+            </div>
+          
+            <div class="answer-row ">
+              <div class="answer-q">ASR Sistemi Kayıt</div>
+              <div class="answer-v">
+                <span class="badge">Arıza kodu yok, sorunsuz</span>
+                
+                
+              </div>
+            </div>
+          
+        </div>
+      </div>
+      
+      <div class="page-footer">
+        <span>Rapor #4 · OBD Arıza Tespit</span>
+        <span>Sayfa 7</span>
+      </div>
+    </div>
+  
+  
+  <div class="page" style="position: relative; justify-content: space-between; padding: 20mm; font-family: sans-serif; background: #ffffff;">
+    
+    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 5px; background: #1A2238;"></div>
+    
+    <div style="width: 100%; display: flex; flex-direction: column; gap: 30px;">
+      
+      <div style="border-b: 1px solid #e4e4e7; padding-bottom: 16px; border-bottom: 1px solid #e4e4e7;">
+        <span style="font-size: 10px; font-weight: 700; color: #71717a; text-transform: uppercase; letter-spacing: 2px; display: block; margin-bottom: 4px;">OPERASYONEL SÜREÇ SONU</span>
+        <h2 style="font-size: 22px; font-weight: 800; color: #1A2238; text-transform: uppercase; letter-spacing: -0.5px;">Ekspertiz Onay ve Kapanış Protokolü</h2>
+      </div>
+
+      <div style="background: #fafafa; border: 1px solid #e4e4e7; border-radius: 12px; padding: 20px;">
+        <p style="font-size: 13px; color: #44403c; font-weight: 500; line-height: 1.6; text-align: justify;">
+          İşbu doküman, başvuru sahibi tarafından ustabakar.com sistemi üzerinden girilen ilan/araç verileri doğrultusunda, sahada görevlendirilen uzman personelin fiziki incelemeleri neticesinde tanzim edilmiştir. İnceleme sürecinde aracın tescilli mekanik aksamları, kaporta-boya durumu ve elektronik beyin modülleri (OBD) usta gözüyle analiz edilerek kayıt altına alınmıştır.
+        </p>
+      </div>
+
+      <div style="margin-top: 10mm;">
+        <div style="font-size: 11px; font-weight: 800; color: #1A2238; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px;">Kayıt Altına Alan Personel Bilgileri</div>
+        
+        <div style="border: 1px solid #e4e4e7; border-radius: 12px; padding: 16px; font-size: 12px; line-height: 2;">
+          <div style="display: flex; justify-content: space-between; border-b: 1px solid #f4f4f5; padding-bottom: 6px; margin-bottom: 6px; border-bottom: 1px solid #f4f4f5;">
+            <span style="color: #71717a; font-weight: 600;">İnceleyen Uzman:</span>
+            <span style="font-weight: 700; color: #1c1917; text-transform: uppercase;">ahmet yılmaz</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; border-b: 1px solid #f4f4f5; padding-bottom: 6px; margin-bottom: 6px; border-bottom: 1px solid #f4f4f5;">
+            <span style="color: #71717a; font-weight: 600;">Sistem Sicil Kodu:</span>
+            <span style="font-weight: 700; color: #1c1917; font-family: monospace;">OP-2026-4</span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: #71717a; font-weight: 600;">Evrak Onay Tarihi:</span>
+            <span style="font-weight: 700; color: #1c1917;">29 Mayıs 2026 19:21</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="margin-top: auto; border-top: 1px solid #e4e4e7; padding-top: 16px;">
+      <p style="font-size: 9.5px; color: #71717a; line-height: 1.6; text-align: justify; font-weight: 500;">
+        <strong>YASAL BEYANAT VE YÜKÜMLÜLÜK SINIRI:</strong> İşbu kontrol evrakı bir garanti belgesi veya sigorta poliçesi niteliğinde değildir. İncelemeyi yapan uzman, motoru indirmeden, kaporta parçalarını sökmeden ve araç üzerinde demonte işlemler yapmadan fiziki ve teknolojik gözlem yeteneğiyle ön kontrol yapmıştır. Raporun tanzim edildiği an haricindeki zaman dilimlerinde araçta oluşabilecek aşınma, kaza veya mekanik/elektronik arızalardan uzman usta veya ustabakar platformu hiçbir hukuki sorumluluk kabul etmez. Taraflar bu şartları kabul etmiş sayılır.
+      </p>
+      
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; font-size: 10px; font-weight: 700; color: #1A2238;">
+        <span>ustabakar.com</span>
+        <span style="color: #a1a1aa; font-weight: 500;">İletişim: iletisim@ustabakar.com</span>
+        <span style="font-family: monospace;">Ref: #4</span>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
