@@ -277,9 +277,9 @@ export default function AdminReportDetail() {
           </h3>
           <div className="grid grid-cols-3 gap-2">
             {report.photos.map((p) => (
-              <a key={p.id} href={`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}${p.url}`} target="_blank" rel="noreferrer" className="group">
+              <a key={p.id} href={`${(import.meta.env.VITE_API_URL || 'http://localhost:3001/api').replace('/api', '')}${p.url}`} target="_blank" rel="noreferrer" className="group">
                 <img
-                  src={`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}${p.url}`}
+                  src={`${(import.meta.env.VITE_API_URL || 'http://localhost:3001/api').replace('/api', '')}${p.url}`}
                   alt=""
                   className="w-full aspect-square object-cover rounded-lg group-hover:opacity-90 transition-opacity"
                 />

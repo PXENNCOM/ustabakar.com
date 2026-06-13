@@ -155,8 +155,8 @@ function ReportCard({ report, requestId }) {
           </h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
             {report.photos.map((p) => (
-              <a key={p.id} href={`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}${p.url}`} target="_blank" rel="noreferrer" className="relative aspect-square rounded-xl overflow-hidden bg-zinc-50 border border-zinc-100 group shadow-sm block">
-                <img src={`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}${p.url}`} alt="" className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+              <a key={p.id} href={`${(import.meta.env.VITE_API_URL || 'http://localhost:3001/api').replace('/api', '')}${p.url}`} target="_blank" rel="noreferrer" className="relative aspect-square rounded-xl overflow-hidden bg-zinc-50 border border-zinc-100 group shadow-sm block">
+                <img src={`${(import.meta.env.VITE_API_URL || 'http://localhost:3001/api').replace('/api', '')}${p.url}`} alt="" className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
               </a>
             ))}
           </div>
