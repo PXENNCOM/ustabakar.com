@@ -6,7 +6,6 @@ server/node_modules/
 # Environment
 .env
 .env.local
-server/.env
 
 # Upload edilen dosyalar
 server/uploads/*

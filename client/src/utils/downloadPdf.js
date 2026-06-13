@@ -1,7 +1,7 @@
 export const downloadPdf = (url, filename) => {
   const token = localStorage.getItem('token');
   
-  fetch(`http://localhost:3001/api${url}`, {
+  fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}${url}`, {
     headers: { Authorization: `Bearer ${token}` },
   })
     .then((res) => res.arrayBuffer())

@@ -166,7 +166,7 @@ export default function MasterAssignmentDetail() {
             {request.photos.map((p) => (
               <div key={p.id} className="relative aspect-square rounded-xl overflow-hidden border border-zinc-50 bg-zinc-50 group">
                 <img 
-                  src={`http://localhost:3001${p.url}`} 
+                  src={`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}${p.url}`} 
                   alt="" 
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
                 />

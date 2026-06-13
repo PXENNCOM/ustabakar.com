@@ -24,7 +24,7 @@ import MasterLogin from './pages/master/Login';
 import MasterRegister from './pages/master/Register';
 import MasterHome from './pages/master/Home';
 import MasterAssignmentDetail from './pages/master/AssignmentDetail';
-import MasterReportForm from './pages/master/ReportForm/index'; // <-- Yeni eklenen form sayfası
+import MasterReportForm from './pages/master/ReportForm/index'; 
 import MasterEarnings from './pages/master/Earnings';
 import MasterProfile from './pages/master/Profile';
 
