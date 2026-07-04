@@ -15,7 +15,7 @@ const İndex = () => {
             />
           </div>
           <p className="text-zinc-500 text-xs md:text-sm leading-relaxed max-w-sm font-medium">
-            TSE standartlarında, tarafsız ve bağımsız oto ekspertiz çözümleri. Aklınızda soru işareti kalmasın.
+            TSE standartlarında, tarafsız ön ekspertiz çözümleri. Aklınızda soru işareti kalmasın.
           </p>
           
           {/* SOSYAL MEDYA İKONLARI */}
@@ -53,10 +53,9 @@ const İndex = () => {
           <div className="flex flex-col space-y-4">
             <span className="text-[10px] font-mono font-black text-zinc-400 tracking-widest uppercase">KURUMSAL</span>
             <div className="flex flex-col space-y-2.5 text-xs font-black text-[#1A2238] tracking-wider uppercase">
-              <a href="/hakkimizda" className="hover:text-[#ffe119] transition-colors">HAKKIMIZDA</a>
-              <a href="/hizmetler" className="hover:text-[#ffe119] transition-colors">HİZMET PAKETLERİ</a>
-              <a href="/iletisim" className="hover:text-[#ffe119] transition-colors">İLETİŞİM</a>
-              <a href="/usta-basvuru" className="hover:text-[#ffe119] transition-colors">USTA BAŞVURU</a>
+              <a href="/kurumsal" className="hover:text-[#ffe119] transition-colors">HAKKIMIZDA</a>
+              <a href="/kurumsal" className="hover:text-[#ffe119] transition-colors">İLETİŞİM</a>
+              <a href="/usta/basvuru" className="hover:text-[#ffe119] transition-colors">USTA BAŞVURU</a>
             </div>
           </div>
 
@@ -64,9 +63,9 @@ const İndex = () => {
           <div className="flex flex-col space-y-4">
             <span className="text-[10px] font-mono font-black text-zinc-400 tracking-widest uppercase">SÖZLEŞMELER</span>
             <div className="flex flex-col space-y-2.5 text-xs font-black text-[#1A2238]/80 tracking-wider uppercase">
-              <a href="/teslimat-ve-iade" className="hover:text-[#ffe119] transition-colors leading-relaxed">TESLİMAT & İADE</a>
-              <a href="/gizlilik-sozlesmesi" className="hover:text-[#ffe119] transition-colors leading-relaxed">GİZLİLİK SÖZLEŞMESİ</a>
-              <a href="/mesafeli-satis-sozlesmesi" className="hover:text-[#ffe119] transition-colors leading-relaxed">MESAFELİ SATIŞ SÖZLEŞMESİ</a>
+              <a href="/kurumsal" className="hover:text-[#ffe119] transition-colors leading-relaxed">KVKK SÖZLEŞMESİ</a>
+              <a href="/kurumsal" className="hover:text-[#ffe119] transition-colors leading-relaxed">GİZLİLİK SÖZLEŞMESİ</a>
+              <a href="/kurumsal" className="hover:text-[#ffe119] transition-colors leading-relaxed">MESAFELİ SATIŞ SÖZLEŞMESİ</a>
             </div>
           </div>
         </div>
@@ -81,22 +80,33 @@ const İndex = () => {
             </p>
           </div>
           <div className="pt-4">
-            <a href="tel:08500000000" className="inline-flex items-center space-x-2 text-xs font-black text-[#1A2238] bg-[#ffe119] px-4 py-3 rounded-xl shadow-sm hover:shadow-md transition-all">
-              <span>0850 000 00 00</span>
+            <a href="tel:+905356808141" className="inline-flex items-center space-x-2 text-xs font-black text-[#1A2238] bg-[#ffe119] px-4 py-3 rounded-xl shadow-sm hover:shadow-md transition-all">
+              <span>+90 535 680 81 41</span>
             </a>
           </div>
         </div>
 
       </div>
 
-      {/* ALT ALAN: COPYRIGHT */}
-      <div className="max-w-7xl mx-auto pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] font-mono font-bold text-zinc-400 tracking-wider uppercase">
-        <div>
-          © {new Date().getFullYear()} OTOBAKAR. TÜM HAKLARI SAKLIDIR.
+      {/* ALT ALAN: COPYRIGHT VE ÖDEME LOGOLARI */}
+      <div className="max-w-7xl mx-auto pt-8 flex flex-col md:flex-row items-center justify-between gap-6 text-[11px] font-mono font-bold text-zinc-400 tracking-wider uppercase">
+        <div className="flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
+          <div>
+            © {new Date().getFullYear()} OTOBAKAR. TÜM HAKLARI SAKLIDIR.
+          </div>
+          <div className="hidden sm:flex items-center space-x-2">
+            <span>MADE WITH PXENN</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-[#ffe119]"></span>
+          </div>
         </div>
-        <div className="flex items-center space-x-2">
-          <span>MADE WITH PXENN</span>
-          <span className="w-1.5 h-1.5 rounded-full bg-[#ffe119]"></span>
+        
+        {/* ÖDEME YÖNTEMLERİ LOGO BANDI */}
+        <div className="flex items-center justify-center">
+          <img 
+            src="assets/logo_band_colored@3x kopyası.png" 
+            alt="İyzico, Mastercard, Visa Ödeme Yöntemleri" 
+            className="h-5 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity"
+          />
         </div>
       </div>
     </footer>

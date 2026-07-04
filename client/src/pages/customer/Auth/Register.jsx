@@ -28,17 +28,30 @@ export default function CustomerRegister() {
   const { login } = useAuth();
   const navigate  = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [form,    setForm]    = useState({ name: '', surname: '', phone: '', city_id: '' });
+  // State'e kvkk ve agreement boolean değerleri eklendi
+  const [form,    setForm]    = useState({ name: '', surname: '', phone: '', city_id: '', kvkk: false, agreement: false });
   const [errors,  setErrors]  = useState({});
 
   const { data: citiesData } = useQuery({
     queryKey: ['cities'],
     queryFn:  () => commonService.getCities(),
   });
-  const cities = citiesData?.data?.data || [];
+
+  const PRIORITY_CITIES = ['İstanbul', 'Ankara', 'İzmir'];
+
+  const cities = (() => {
+    const all = citiesData?.data?.data || [];
+    const priority = PRIORITY_CITIES
+      .map(name => all.find(c => c.name === name))
+      .filter(Boolean);
+    const rest = all.filter(c => !PRIORITY_CITIES.includes(c.name));
+    return [...priority, ...rest];
+  })();
 
   const set = (field) => (e) => {
-    setForm(f => ({ ...f, [field]: e.target.value }));
+    // Checkbox veya normal input ayrımı için
+    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+    setForm(f => ({ ...f, [field]: value }));
     if (errors[field]) setErrors(er => ({ ...er, [field]: '' }));
   };
 
@@ -49,6 +62,11 @@ export default function CustomerRegister() {
     if (!form.phone.trim())   errs.phone   = 'Telefon zorunludur';
     else if (!/^[0-9]{10,11}$/.test(form.phone.replace(/\s/g, ''))) errs.phone = 'Geçerli bir telefon girin';
     if (!form.city_id)        errs.city_id = 'İl seçimi zorunludur';
+    
+    // Sözleşme kontrolleri
+    if (!form.kvkk)           errs.kvkk    = 'KVKK metnini onaylamalısınız';
+    if (!form.agreement)      errs.agreement = 'Mesafeli satış sözleşmesini onaylamalısınız';
+    
     return errs;
   };
 
@@ -58,7 +76,10 @@ export default function CustomerRegister() {
     if (Object.keys(errs).length) { setErrors(errs); return; }
     setLoading(true);
     try {
-      const res = await authService.customerRegister(form);
+      // API'ye gönderirken kvkk ve agreement alanlarını temizlemek isterseniz destructuring yapabilirsiniz
+      const { kvkk, agreement, ...registerData } = form;
+      const res = await authService.customerRegister(registerData);
+      
       const { token, customer } = res.data.data;
       login(token, { ...customer, role: 'customer' });
       toast.success('Kayıt başarılı! Hoş geldiniz.');
@@ -151,6 +172,41 @@ export default function CustomerRegister() {
               <p className="text-xs text-gray-500 font-normal leading-relaxed">
                 Numaranıza SMS doğrulama kodu gönderilecektir.
               </p>
+            </div>
+
+            {/* KVKK ve Sözleşme Onayları */}
+            <div className="space-y-3 pt-2">
+              {/* KVKK */}
+              <div>
+                <label className="flex items-start gap-3 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={form.kvkk}
+                    onChange={set('kvkk')}
+                    className="mt-0.5 h-4 w-4 rounded border-gray-300 text-[#ffe119] focus:ring-[#ffe119]/50 accent-[#ffe119]"
+                  />
+                  <span className="text-xs text-gray-500 leading-tight">
+                    <Link to="/kvkk" target="_blank" className="font-semibold underline hover:text-gray-700">KVKK metnini</Link> okudum ve kabul ediyorum.
+                  </span>
+                </label>
+                <FieldError msg={errors.kvkk} />
+              </div>
+
+              {/* Mesafeli Satış Sözleşmesi */}
+              <div>
+                <label className="flex items-start gap-3 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={form.agreement}
+                    onChange={set('agreement')}
+                    className="mt-0.5 h-4 w-4 rounded border-gray-300 text-[#ffe119] focus:ring-[#ffe119]/50 accent-[#ffe119]"
+                  />
+                  <span className="text-xs text-gray-500 leading-tight">
+                    <Link to="/mesafeli-satis" target="_blank" className="font-semibold underline hover:text-gray-700">Mesafeli Satış Sözleşmesi</Link>'ni okudum ve onaylıyorum.
+                  </span>
+                </label>
+                <FieldError msg={errors.agreement} />
+              </div>
             </div>
 
             {/* Kayıt Ol Butonu */}

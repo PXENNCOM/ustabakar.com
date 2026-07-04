@@ -51,8 +51,16 @@ export default function CustomerNewRequest() {
   const { data: citiesData } = useQuery({ queryKey: ['cities'], queryFn: () => commonService.getCities() });
   const { data: packagesData } = useQuery({ queryKey: ['packages'], queryFn: () => commonService.getPackages() });
 
-  const cities = citiesData?.data?.data || [];
-  const packages = packagesData?.data?.data || [];
+const PRIORITY_CITIES = ['İstanbul', 'Ankara', 'İzmir'];
+
+const cities = (() => {
+  const all = citiesData?.data?.data || [];
+  const priority = PRIORITY_CITIES.map(name => all.find(c => c.name === name)).filter(Boolean);
+  const rest = all.filter(c => !PRIORITY_CITIES.includes(c.name));
+  return [...priority, ...rest];
+})();
+
+const packages = packagesData?.data?.data || [];
 
   const validateStep = () => {
     if (step === 1) {

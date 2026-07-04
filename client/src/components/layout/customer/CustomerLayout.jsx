@@ -2,7 +2,7 @@ import { Outlet } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 
-const whatsappUrl = `https://wa.me/905000000000?text=${encodeURIComponent('Merhaba Usta Bakar, bir konu hakkında destek almak istiyorum.')}`;
+const whatsappUrl = `https://wa.me/+905356808141?text=${encodeURIComponent('Merhaba Usta Bakar, bir konu hakkında destek almak istiyorum.')}`;
 
 export default function CustomerLayout() {
   return (

@@ -37,7 +37,7 @@ export default function LinkForm({ form, onChange, errors, cities }) {
           <textarea
             rows={3}
             style={{ resize: 'none' }}
-            placeholder="https://www.sahibinden.com/ilan/..."
+            placeholder="https://www.araclink.com/ilan/..."
             className={`w-full pl-9 pr-4 py-3.5 text-sm font-semibold text-zinc-800 bg-zinc-50 border-2 rounded-xl outline-none transition-all ${
               errors.listing_url ? 'border-red-400 focus:bg-white' : 'border-zinc-100 focus:border-[#ffe119] focus:bg-white'
             }`}
@@ -54,7 +54,7 @@ export default function LinkForm({ form, onChange, errors, cities }) {
         <textarea
           rows={3}
           style={{ resize: 'none' }}
-          placeholder="Örn: Özellikle sol kapıdaki çiziğe ve motor sesine dikkat edilmesini rica ederim."
+          placeholder="Özellikle sol kapıdaki çiziğe ve motor sesine dikkat edilmesini rica ederim."
           className="w-full px-4 py-3.5 text-sm font-semibold text-zinc-800 bg-zinc-50 border-2 border-zinc-100 rounded-xl outline-none transition-all focus:border-[#ffe119] focus:bg-white"
           value={form.customer_note}
           onChange={(e) => onChange('customer_note', e.target.value)}

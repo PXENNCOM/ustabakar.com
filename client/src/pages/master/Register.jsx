@@ -34,8 +34,7 @@ function PersonalStep({ form, onChange, errors }) {
         <div>
           <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Ad</label>
           <input 
-            className={`w-full px-4 py-2.5 bg-gray-50/50 border ${errors.name ? 'border-red-500 focus:ring-red-100' : 'border-gray-200 focus:border-[#ffe119]'}`} 
-            className={`w-full px-4 py-2.5 bg-gray-50/50 border ${errors.name ? 'border-red-500' : 'border-gray-200 focus:border-[#ffe119]'} rounded-xl text-gray-900 text-sm outline-none transition-all focus:ring-2 focus:ring-[#ffe119]/20`}
+            className={`w-full px-4 py-2.5 bg-gray-50/50 border ${errors.name ? 'border-red-500 focus:ring-red-100' : 'border-gray-200 focus:border-[#ffe119]'} rounded-xl text-gray-900 text-sm outline-none transition-all focus:ring-2 focus:ring-[#ffe119]/20`}
             placeholder="Ahmet" 
             value={form.name} 
             onChange={(e) => onChange('name', e.target.value)} 
@@ -135,7 +134,7 @@ function LocationStep({ form, onChange, errors, cities, expertises }) {
   );
 }
 
-// Deneyim adımı
+// Deneyim adımı (Sözleşmeler Buraya Eklendi)
 function ExperienceStep({ form, onChange, errors }) {
   return (
     <div className="space-y-5">
@@ -186,6 +185,39 @@ function ExperienceStep({ form, onChange, errors }) {
         />
         {errors.certificate && <p className="mt-1 text-xs text-red-500 font-medium">{errors.certificate}</p>}
       </div>
+
+      {/* --- SÖZLEŞME ONAY ALANLARI --- */}
+      <div className="space-y-3 pt-3 border-t border-gray-100">
+        <div>
+          <label className="flex items-start gap-3 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={form.kvkk}
+              onChange={(e) => onChange('kvkk', e.target.checked)}
+              className="mt-0.5 h-4 w-4 rounded border-gray-300 text-[#ffe119] focus:ring-[#ffe119]/50 accent-[#ffe119]"
+            />
+            <span className="text-xs text-gray-500 leading-tight">
+              <Link to="/kurumsal" target="_blank" className="font-semibold underline hover:text-gray-700">KVKK Aydınlatma Metni'ni</Link> okudum ve kabul ediyorum.
+            </span>
+          </label>
+          {errors.kvkk && <p className="mt-1 text-xs text-red-500 font-medium">{errors.kvkk}</p>}
+        </div>
+
+        <div>
+          <label className="flex items-start gap-3 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={form.agreement}
+              onChange={(e) => onChange('agreement', e.target.checked)}
+              className="mt-0.5 h-4 w-4 rounded border-gray-300 text-[#ffe119] focus:ring-[#ffe119]/50 accent-[#ffe119]"
+            />
+            <span className="text-xs text-gray-500 leading-tight">
+              <Link to="/kurumsal" target="_blank" className="font-semibold underline hover:text-gray-700">Usta Hizmet ve Gizlilik Sözleşmesi'ni</Link> okudum ve onaylıyorum.
+            </span>
+          </label>
+          {errors.agreement && <p className="mt-1 text-xs text-red-500 font-medium">{errors.agreement}</p>}
+        </div>
+      </div>
     </div>
   );
 }
@@ -197,10 +229,12 @@ export default function MasterRegister() {
   const [errors, setErrors] = useState({});
   const totalSteps = 3;
 
+  // State'e kvkk ve agreement eklendi
   const [form, setForm] = useState({
     name: '', surname: '', tc: '', phone: '',
     city_id: '', district_name: '', expertise_id: '',
     experience: '', equipment: '', reference: '', certificate: null,
+    kvkk: false, agreement: false
   });
 
   const onChange = (field, value) => {
@@ -244,6 +278,10 @@ export default function MasterRegister() {
       if (!form.equipment.trim()) errs.equipment = 'Ekipman bilgisi zorunludur';
       if (!form.reference.trim()) errs.reference = 'Referans zorunludur';
       if (!form.certificate) errs.certificate = 'Ustalık belgesi zorunludur';
+      
+      // Onay kutucukları kontrolü
+      if (!form.kvkk) errs.kvkk = 'KVKK metnini onaylamalısınız';
+      if (!form.agreement) errs.agreement = 'Sözleşmeyi onaylamalısınız';
     }
 
     if (Object.keys(errs).length) { setErrors(errs); return false; }
@@ -271,6 +309,8 @@ export default function MasterRegister() {
       fd.append('equipment', form.equipment);
       fd.append('reference', form.reference);
       fd.append('certificate', form.certificate);
+      // Not: kvkk ve agreement boolean değerleri backend'e (FormData yapısına) eklenmez, 
+      // sadece yukarıdaki validateStep aşamasında frontend kontrolü için saklanır.
 
       await authService.masterRegister(fd);
       toast.success('Başvurunuz alındı! Ekibimiz sizi inceleyip onaylayacak.');

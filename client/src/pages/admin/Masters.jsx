@@ -6,25 +6,50 @@ import { Table, Pagination, StatusBadge, Spinner, EmptyState } from '../../compo
 import { Users, Search, Eye, Filter, X, ChevronDown, ChevronUp, Plus } from 'lucide-react';
 
 const statusOptions = [
-  { value: '', label: 'Tüm Durumlar' },
-  { value: 'active', label: 'Aktif' },
-  { value: 'passive', label: 'Pasif' },
-  { value: 'pending', label: 'Onay Bekliyor' },
+  { value: '',         label: 'Tüm Durumlar' },
+  { value: 'active',   label: 'Aktif' },
+  { value: 'passive',  label: 'Pasif' },
+  { value: 'pending',  label: 'Onay Bekliyor' },
   { value: 'rejected', label: 'Reddedildi' },
 ];
 
+const sortOptions = [
+  { value: 'newest',               label: 'En Yeni' },
+  { value: 'oldest',               label: 'En Eski' },
+  { value: 'jobs_desc',            label: 'İş Sayısı (Azalan)' },
+  { value: 'jobs_asc',             label: 'İş Sayısı (Artan)' },
+  { value: 'cancelled_desc',       label: 'İptal Sayısı (Azalan)' },
+  { value: 'monthly_avg_desc',     label: 'Ort. Aylık Kazanç (En Çok)' },
+  { value: 'monthly_avg_asc',      label: 'Ort. Aylık Kazanç (En Az)' },
+  { value: 'total_earning_desc',   label: 'Toplam Kazanç (En Çok)' },
+  { value: 'completion_rate_desc', label: 'Tamamlanma Oranı (En Yüksek)' },
+  { value: 'active_days_desc',     label: 'En Köklü Usta' },
+];
+
 const EMPTY_FILTERS = {
-  search: '',
-  status: '',
-  city_id: '',
-  expertise_id: '',
-  registered_by: '',
-  date_from: '',
-  date_to: '',
+  search:               '',
+  status:               '',
+  city_id:              '',
+  expertise_id:         '',
+  registered_by:        '',
+  date_from:            '',
+  date_to:              '',
+  sort:                 'newest',
+  job_count_min:        '',
+  job_count_max:        '',
+  cancelled_min:        '',
+  has_earnings:         '',
+  total_earning_min:    '',
+  has_active_assignment:'',
+  completion_rate_min:  '',
+  active_days_min:      '',
+  active_days_max:      '',
 };
 
 function FilterPanel({ filters, onChange, onReset, cities, expertises }) {
-  const activeCount = Object.values(filters).filter(Boolean).length;
+  const activeCount = Object.entries(filters)
+    .filter(([k, v]) => k !== 'sort' && Boolean(v))
+    .length;
 
   return (
     <div className="bg-white border border-gray-200 rounded-xl p-5 space-y-4">
@@ -44,6 +69,7 @@ function FilterPanel({ filters, onChange, onReset, cities, expertises }) {
       </div>
 
       <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
+
         {/* Arama */}
         <div className="col-span-2 xl:col-span-1">
           <label className="text-xs font-medium text-gray-500 block mb-1">İsim / Telefon</label>
@@ -94,7 +120,7 @@ function FilterPanel({ filters, onChange, onReset, cities, expertises }) {
           </select>
         </div>
 
-        {/* Tarih aralığı */}
+        {/* Tarih */}
         <div>
           <label className="text-xs font-medium text-gray-500 block mb-1">Kayıt Başlangıç</label>
           <input type="date" className="input text-sm" value={filters.date_from} onChange={(e) => onChange('date_from', e.target.value)} />
@@ -103,6 +129,72 @@ function FilterPanel({ filters, onChange, onReset, cities, expertises }) {
           <label className="text-xs font-medium text-gray-500 block mb-1">Kayıt Bitiş</label>
           <input type="date" className="input text-sm" value={filters.date_to} onChange={(e) => onChange('date_to', e.target.value)} />
         </div>
+
+        {/* İş Sayısı */}
+        <div>
+          <label className="text-xs font-medium text-gray-500 block mb-1">Min. İş Sayısı</label>
+          <input type="number" min="0" className="input text-sm" placeholder="0"
+            value={filters.job_count_min} onChange={(e) => onChange('job_count_min', e.target.value)} />
+        </div>
+        <div>
+          <label className="text-xs font-medium text-gray-500 block mb-1">Max. İş Sayısı</label>
+          <input type="number" min="0" className="input text-sm" placeholder="—"
+            value={filters.job_count_max} onChange={(e) => onChange('job_count_max', e.target.value)} />
+        </div>
+
+        {/* İptal */}
+        <div>
+          <label className="text-xs font-medium text-gray-500 block mb-1">Min. İptal Sayısı</label>
+          <input type="number" min="0" className="input text-sm" placeholder="0"
+            value={filters.cancelled_min} onChange={(e) => onChange('cancelled_min', e.target.value)} />
+        </div>
+
+        {/* Kazanç Durumu */}
+        <div>
+          <label className="text-xs font-medium text-gray-500 block mb-1">Kazanç Durumu</label>
+          <select className="input bg-white text-sm" value={filters.has_earnings} onChange={(e) => onChange('has_earnings', e.target.value)}>
+            <option value="">Tümü</option>
+            <option value="yes">Kazancı Var</option>
+            <option value="no">Kazancı Yok</option>
+          </select>
+        </div>
+
+        {/* Min. Toplam Kazanç */}
+        <div>
+          <label className="text-xs font-medium text-gray-500 block mb-1">Min. Toplam Kazanç (₺)</label>
+          <input type="number" min="0" className="input text-sm" placeholder="0"
+            value={filters.total_earning_min} onChange={(e) => onChange('total_earning_min', e.target.value)} />
+        </div>
+
+        {/* Aktif İş */}
+        <div>
+          <label className="text-xs font-medium text-gray-500 block mb-1">Aktif İş</label>
+          <select className="input bg-white text-sm" value={filters.has_active_assignment} onChange={(e) => onChange('has_active_assignment', e.target.value)}>
+            <option value="">Tümü</option>
+            <option value="yes">Şu An Aktif İşi Var</option>
+            <option value="no">Aktif İşi Yok</option>
+          </select>
+        </div>
+
+        {/* Tamamlanma Oranı */}
+        <div>
+          <label className="text-xs font-medium text-gray-500 block mb-1">Min. Tamamlanma Oranı (%)</label>
+          <input type="number" min="0" max="100" className="input text-sm" placeholder="0"
+            value={filters.completion_rate_min} onChange={(e) => onChange('completion_rate_min', e.target.value)} />
+        </div>
+
+        {/* Sistemde Geçen Gün */}
+        <div>
+          <label className="text-xs font-medium text-gray-500 block mb-1">Min. Sistemde Gün</label>
+          <input type="number" min="0" className="input text-sm" placeholder="0"
+            value={filters.active_days_min} onChange={(e) => onChange('active_days_min', e.target.value)} />
+        </div>
+        <div>
+          <label className="text-xs font-medium text-gray-500 block mb-1">Max. Sistemde Gün</label>
+          <input type="number" min="0" className="input text-sm" placeholder="—"
+            value={filters.active_days_max} onChange={(e) => onChange('active_days_max', e.target.value)} />
+        </div>
+
       </div>
     </div>
   );
@@ -117,11 +209,30 @@ function MasterRow({ master, onDetail }) {
       </td>
       <td className="px-4 py-3 text-sm text-gray-600">{master.City?.name || '—'}</td>
       <td className="px-4 py-3 text-sm text-gray-600">{master.expertise?.name || '—'}</td>
+      <td className="px-4 py-3 text-sm text-gray-600 text-center">{master.completedCount ?? 0}</td>
+      <td className="px-4 py-3 text-sm text-gray-600 text-center">{master.cancelledCount ?? 0}</td>
+      <td className="px-4 py-3 text-sm text-center">
+        {master.completionRate != null ? (
+          <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
+            master.completionRate >= 80 ? 'bg-green-100 text-green-700' :
+            master.completionRate >= 50 ? 'bg-yellow-100 text-yellow-700' :
+            'bg-red-100 text-red-600'
+          }`}>
+            %{master.completionRate}
+          </span>
+        ) : '—'}
+      </td>
+      <td className="px-4 py-3 text-sm text-gray-600 text-right">
+        {master.totalEarning != null
+          ? `${Number(master.totalEarning).toLocaleString('tr-TR', { maximumFractionDigits: 0 })} ₺`
+          : '—'}
+      </td>
+      <td className="px-4 py-3 text-sm text-gray-500 text-center">
+        {master.activeDays != null ? `${master.activeDays} gün` : '—'}
+      </td>
       <td className="px-4 py-3">
         <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-          master.registered_by === 'admin'
-            ? 'bg-purple-100 text-purple-700'
-            : 'bg-gray-100 text-gray-600'
+          master.registered_by === 'admin' ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-600'
         }`}>
           {master.registered_by === 'admin' ? 'Admin' : 'Başvuru'}
         </span>
@@ -155,23 +266,18 @@ export default function AdminMasters() {
     setPage(1);
   };
 
-  const activeFilterCount = Object.values(filters).filter(Boolean).length;
+  const activeFilterCount = Object.entries(filters)
+    .filter(([k, v]) => k !== 'sort' && Boolean(v))
+    .length;
 
   const { data, isLoading } = useQuery({
     queryKey: ['admin-masters', page, filters],
-    queryFn: () => adminService.getMasters({ page, limit: 20, ...filters }),
+    queryFn:  () => adminService.getMasters({ page, limit: 20, ...filters }),
     keepPreviousData: true,
   });
 
-  const { data: citiesData } = useQuery({
-    queryKey: ['cities'],
-    queryFn: () => commonService.getCities(),
-  });
-
-  const { data: expertisesData } = useQuery({
-    queryKey: ['admin-expertises'],
-    queryFn: () => adminService.getExpertises(),
-  });
+  const { data: citiesData }    = useQuery({ queryKey: ['cities'],           queryFn: () => commonService.getCities() });
+  const { data: expertisesData } = useQuery({ queryKey: ['admin-expertises'], queryFn: () => adminService.getExpertises() });
 
   const masters    = data?.data?.data?.items || [];
   const pagination = data?.data?.data?.pagination;
@@ -180,13 +286,21 @@ export default function AdminMasters() {
 
   return (
     <div className="space-y-5">
-      {/* Başlık */}
+
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold text-gray-900">Ustalar</h1>
           {pagination && <p className="text-sm text-gray-500 mt-0.5">Toplam {pagination.total} usta</p>}
         </div>
         <div className="flex items-center gap-2">
+          <select
+            className="input bg-white text-sm font-medium text-gray-700 border-gray-200 rounded-xl px-3 py-2"
+            value={filters.sort}
+            onChange={(e) => onChange('sort', e.target.value)}
+          >
+            {sortOptions.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
+          </select>
+
           <button
             onClick={() => setShowFilters((s) => !s)}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium border transition-all ${
@@ -202,6 +316,7 @@ export default function AdminMasters() {
             )}
             {showFilters ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
           </button>
+
           <button
             onClick={() => navigate('/admin/basvurular')}
             className="flex items-center gap-2 px-4 py-2 bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium rounded-xl transition-colors"
@@ -211,7 +326,6 @@ export default function AdminMasters() {
         </div>
       </div>
 
-      {/* Filtre paneli */}
       {showFilters && (
         <FilterPanel
           filters={filters}
@@ -222,7 +336,6 @@ export default function AdminMasters() {
         />
       )}
 
-      {/* Tablo */}
       <div className="card overflow-hidden">
         {isLoading ? (
           <Spinner />
@@ -230,7 +343,7 @@ export default function AdminMasters() {
           <EmptyState icon={Users} title="Usta bulunamadı" description="Filtrelerinizi değiştirmeyi deneyin" />
         ) : (
           <>
-            <Table headers={['Ad Soyad', 'İl', 'Uzmanlık', 'Kayıt Yöntemi', 'Kayıt Tarihi', 'Durum', '']}>
+            <Table headers={['Ad Soyad', 'İl', 'Uzmanlık', 'İş', 'İptal', 'Oran', 'Top. Kazanç', 'Süre', 'Kayıt', 'Tarih', 'Durum', '']}>
               {masters.map((m) => (
                 <MasterRow key={m.id} master={m} onDetail={(id) => navigate(`/admin/ustalar/${id}`)} />
               ))}
@@ -241,6 +354,7 @@ export default function AdminMasters() {
           </>
         )}
       </div>
+
     </div>
   );
 }

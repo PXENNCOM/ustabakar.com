@@ -36,6 +36,10 @@ import CustomerRequestDetail from './pages/customer/RequestDetail';
 
 import LandingPage from './pages/landing-page';
 
+// Yeni oluşturulan bilgi sayfalarının importları
+import InfoHubPage from './pages/other-page/InfoHubPage';
+
+
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 1, staleTime: 30000 } },
 });
@@ -46,7 +50,10 @@ export default function App() {
       <AuthProvider>
         <BrowserRouter>
           <Routes>
+            {/* Herkesin Erişebileceği Kamusal Sayfalar (Public Routes) */}
             <Route path="/" element={<LandingPage />} />
+            <Route path="/kurumsal" element={<InfoHubPage />} />
+
 
             {/* Master - auth gerektirmeyen sayfalar ÖNCE */}
             <Route path="/usta/giris" element={<MasterLogin />} />
