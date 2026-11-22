@@ -7,6 +7,18 @@ const RESEND_COOLDOWN_SECONDS = 60;   // Aynı numaraya yeni kod için bekleme
 const MAX_SENDS_PER_HOUR = 5;         // Numara başına saatlik SMS sınırı
 const MAX_VERIFY_ATTEMPTS = 5;        // Kod başına deneme hakkı
 
+// GEÇİCİ TEST MODU: SMS kapalıyken (SMS_ENABLED != true) ve OTP_TEST_CODE 6 haneli
+// bir sayıysa, tüm numaralar için bu sabit kod kullanılır.
+// SMS_ENABLED=true yapıldığı anda otomatik olarak devre dışı kalır.
+const TEST_CODE =
+  process.env.SMS_ENABLED !== 'true' && /^\d{6}$/.test(process.env.OTP_TEST_CODE || '')
+    ? process.env.OTP_TEST_CODE
+    : null;
+
+if (TEST_CODE) {
+  console.warn('[OTP] UYARI: Sabit test kodu aktif, tüm numaralar için aynı kod geçerli!');
+}
+
 // Math.random tahmin edilebilir; kriptografik olarak güvenli üretici kullanılıyor
 const generateOtp = () => crypto.randomInt(100000, 1000000).toString();
 
@@ -42,7 +54,7 @@ const createOtp = async (phone, purpose) => {
     { where: { phone, purpose, consumed_at: null } }
   );
 
-  const code = generateOtp();
+  const code = TEST_CODE || generateOtp();
   const otp = await OtpCode.create({
     phone,
     purpose,

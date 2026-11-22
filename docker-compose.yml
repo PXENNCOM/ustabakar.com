@@ -34,6 +34,7 @@ services:
       ILETIMERKEZI_KEY: ${ILETIMERKEZI_KEY}
       ILETIMERKEZI_HASH: ${ILETIMERKEZI_HASH}
       ILETIMERKEZI_SENDER: ${ILETIMERKEZI_SENDER}
+      OTP_TEST_CODE: ${OTP_TEST_CODE}
       OTP_SECRET: ${OTP_SECRET}
     volumes:
       - ./server/uploads:/app/uploads
