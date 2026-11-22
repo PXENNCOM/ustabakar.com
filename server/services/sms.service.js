@@ -1,4 +1,3 @@
-const crypto = require('crypto');
 const { SmsLog } = require('../models');
 
 const API_URL = 'https://api.iletimerkezi.com/v1/send-sms/json';
@@ -17,12 +16,11 @@ const sendSms = async (phone, text, { logText } = {}) => {
       return { ok: true };
     }
 
+    // Panelde "API Anahtarı" ve "Hash" olarak verilen değerler
     const key = process.env.ILETIMERKEZI_KEY;
-    const secret = process.env.ILETIMERKEZI_SECRET;
+    const hash = process.env.ILETIMERKEZI_HASH;
     const sender = process.env.ILETIMERKEZI_SENDER;
-    if (!key || !secret || !sender) throw new Error('İleti Merkezi ortam değişkenleri eksik');
-
-    const hash = crypto.createHmac('sha256', secret).update(key).digest('hex');
+    if (!key || !hash || !sender) throw new Error('İleti Merkezi ortam değişkenleri eksik');
 
     const response = await fetch(API_URL, {
       method: 'POST',
