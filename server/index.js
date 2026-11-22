@@ -9,7 +9,7 @@ const errorHandler = require('./middlewares/errorHandler');
 const app = express();
 
 app.use(cors());
-app.set('trust proxy', 1);
+app.set('trust proxy', 'loopback, linklocal, uniquelocal');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

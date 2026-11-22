@@ -279,6 +279,16 @@ PackageCategory.belongsTo(ServicePackage, { foreignKey: 'package_id' });
 ReportCategory.hasMany(PackageCategory, { foreignKey: 'category_id' });
 PackageCategory.belongsTo(ReportCategory, { foreignKey: 'category_id', as: 'category' });
 
+const OtpCode = sequelize.define('OtpCode', {
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  phone: DataTypes.STRING(20),
+  purpose: DataTypes.STRING(30),
+  code_hash: DataTypes.STRING(64),
+  attempts: { type: DataTypes.INTEGER, defaultValue: 0 },
+  expires_at: DataTypes.DATE,
+  consumed_at: { type: DataTypes.DATE, allowNull: true },
+}, { tableName: 'otp_codes', timestamps: true, createdAt: 'created_at', updatedAt: false });
+
 module.exports = {
   sequelize,
   Admin, City, District, MasterExpertise,
@@ -286,5 +296,5 @@ module.exports = {
   Request, RequestPhoto, Payment, Assignment,
   ReportCategory, ReportQuestion, QuestionOption,
   Report, ReportAnswer, ReportPhoto,
-  Earning, Ticket, Notification, SmsLog, Setting,
+  Earning, Ticket, Notification, SmsLog, Setting, OtpCode,
 };

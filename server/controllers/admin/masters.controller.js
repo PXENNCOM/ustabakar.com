@@ -2,6 +2,7 @@ const { Op, literal } = require('sequelize');
 const { Master, City, District, MasterExpertise, Assignment, Earning, Request } = require('../../models');
 const { success, error } = require('../../utils/response');
 const { paginate, paginatedResponse } = require('../../utils/pagination');
+const { normalizePhone } = require('../../utils/phone');
 
 const SORT_OPTIONS = {
   newest:               ['created_at',    'DESC'],
@@ -94,10 +95,11 @@ exports.list = async (req, res, next) => {
     if (registered_by) where.registered_by = registered_by;
 
     if (search) {
+      const phoneSearch = search.replace(/\D/g, '').replace(/^0/, '');
       where[Op.or] = [
         { name:    { [Op.like]: `%${search}%` } },
         { surname: { [Op.like]: `%${search}%` } },
-        { phone:   { [Op.like]: `%${search}%` } },
+        { phone:   { [Op.like]: `%${phoneSearch || search}%` } },
       ];
     }
 
@@ -284,11 +286,13 @@ exports.detail = async (req, res, next) => {
 
 exports.create = async (req, res, next) => {
   try {
-    const { name, surname, phone } = req.body;
-    if (!name || !surname || !phone) return error(res, 'Ad, soyad ve telefon zorunludur', 400);
+    const { name, surname } = req.body;
+    if (!name || !surname || !req.body.phone) return error(res, 'Ad, soyad ve telefon zorunludur', 400);
+    const phone = normalizePhone(req.body.phone);
+    if (!phone) return error(res, 'Geçerli bir cep telefonu numarası girin', 400);
     const exists = await Master.findOne({ where: { phone } });
-    if (exists) return error(res, 'Bu telefon zaten kayıtlı', 409);
-    const master = await Master.create({ ...req.body, status: 'active', registered_by: 'admin' });
+    if (exists) return error(res, 'Bu telefon numarası zaten kayıtlı', 409);
+    const master = await Master.create({ ...req.body, phone, status: 'active', registered_by: 'admin' });
     success(res, master, 'Usta oluşturuldu', 201);
   } catch (err) { next(err); }
 };
